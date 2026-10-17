@@ -67,7 +67,7 @@ static void EnableDebugPrivilege() {
     HANDLE tok;
     if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &tok)) return;
     TOKEN_PRIVILEGES tp{}; tp.PrivilegeCount = 1;
-    LookupPrivilegeValueW(nullptr, SE_DEBUG_NAME, &tp.Privileges[0].Luid);
+    LookupPrivilegeValueW(nullptr, L"SeDebugPrivilege", &tp.Privileges[0].Luid);
     tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
     AdjustTokenPrivileges(tok, FALSE, &tp, sizeof(tp), nullptr, nullptr);
     CloseHandle(tok);
