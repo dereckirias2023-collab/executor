@@ -13,37 +13,28 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup MSVC x64
-        uses: ilammy/msvc-dev-cmd@v1
+      - uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: x64
 
-      - name: Compilar 67.exe
+      - name: Compilar
         shell: cmd
-        run: |
-          cl /nologo /std:c++17 /O2 /EHsc /MT /DNDEBUG /W3 /D_CRT_SECURE_NO_WARNINGS ^
-             67.cpp /Fe:67.exe ^
-             /link /SUBSYSTEM:WINDOWS user32.lib gdi32.lib psapi.lib uxtheme.lib comctl32.lib
+        run: cl /nologo /std:c++17 /O2 /EHsc /MT /DNDEBUG /W3 /DUNICODE /D_UNICODE /D_CRT_SECURE_NO_WARNINGS 67.cpp /Fe:67.exe /link /SUBSYSTEM:WINDOWS user32.lib gdi32.lib psapi.lib uxtheme.lib comctl32.lib
 
-      - name: Verificar que se genero
+      - name: Verificar
         shell: cmd
-        run: |
-          if not exist 67.exe ( echo ERROR: no se genero & exit /b 1 )
-          dir 67.exe
+        run: dir 67.exe
 
-      - name: Subir artifact
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: 67-windows-x64
           path: 67.exe
 
-      - name: Publicar release con el exe
-        uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@v2
         with:
           tag_name: latest
           name: 67 latest
-          make_latest: true
+          make_latest: "true"
           files: 67.exe
